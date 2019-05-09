@@ -8,6 +8,12 @@ export default {
   createPost: function(data) {
     return axios.post('/api/posts', data);
   },
+  signup: function(data) {
+    return axios.post('/api/users/signup', data);
+  },
+  validateToken: function(t) {
+    return axios.post('/api/users/validate', { token: t });
+  },
   // // Gets the book with the given id
   // getBook: function(id) {
   //   return axios.get("/api/books/" + id);
