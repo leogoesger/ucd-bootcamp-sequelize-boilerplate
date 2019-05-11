@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import API from '../utils/API';
 // // import { Link } from 'react-router-dom';
 // import RandomHomeComponent from '../components/RandomHomeComponent';
+import { Context } from '../context';
 
 class Login extends Component {
   state = {
@@ -20,9 +21,16 @@ class Login extends Component {
     }
   }
 
-  onSubmit = () => {
+  onSubmit = dispatch => {
     API.login(this.state)
-      .then(res => localStorage.setItem('current_user_token', res.data.token))
+      .then(res => {
+        localStorage.setItem('current_user_token', res.data.token);
+        dispatch({
+          type: 'set_current_user',
+          value: { email: res.data.email },
+        });
+      })
+      .then(() => this.props.history.push('/'))
       .catch(err => console.log(err));
   };
 
@@ -30,27 +38,34 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <h1>Login</h1>
-        <input
-          type="text"
-          value={this.state.email}
-          label="email"
-          onChange={this.onChange('email')}
-        />
-        <input
-          type="password"
-          value={this.state.password}
-          label="password"
-          onChange={this.onChange('password')}
-        />
-        <button
-          onClick={this.onSubmit}
-          disabled={!Boolean(this.state.email && this.state.password)}
-        >
-          Login
-        </button>
-      </div>
+      <Context.Consumer>
+        {value => {
+          // console.log(value);
+          return (
+            <div>
+              <h1>Login</h1>
+              <input
+                type="text"
+                value={this.state.email}
+                label="email"
+                onChange={this.onChange('email')}
+              />
+              <input
+                type="password"
+                value={this.state.password}
+                label="password"
+                onChange={this.onChange('password')}
+              />
+              <button
+                onClick={() => this.onSubmit(value.dispatch)}
+                disabled={!Boolean(this.state.email && this.state.password)}
+              >
+                Login
+              </button>
+            </div>
+          );
+        }}
+      </Context.Consumer>
     );
   }
 }

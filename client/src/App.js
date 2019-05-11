@@ -5,16 +5,13 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import NoMatch from './pages/NoMatch';
 import Navbar from './components/Navbar';
-import { CounterProvider } from './context';
-
-const initialState = { currentUser: {} };
-const UserContext = React.createContext(initialState);
+import { UserContext } from './context';
 
 function App() {
   return (
     <Router>
-      <CounterProvider>
-        <div>
+      <div>
+        <UserContext>
           <Navbar />
           <Switch>
             <Route exact path="/" component={Home} />
@@ -22,8 +19,8 @@ function App() {
             <Route exact path="/signup" component={Signup} />
             <Route component={NoMatch} />
           </Switch>
-        </div>
-      </CounterProvider>
+        </UserContext>
+      </div>
     </Router>
   );
 }

@@ -11,7 +11,9 @@ module.exports = {
       if (err) {
         return res.status(400).send({ msg: 'yo token is bad!' });
       }
-      return res.status(200).send({ msg: 'yo token is good!' });
+      return db.User.findOne({ where: { email: decoded.email } }).then(u =>
+        res.status(200).send({ email: u.email })
+      );
     });
   },
   login: function(req, res) {

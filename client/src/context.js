@@ -1,26 +1,25 @@
 import React, { useReducer } from 'react';
 
 const reducer = (state, action) => {
+  console.log(action);
   switch (action.type) {
-    case 'setUser':
-      return { ...state, currentUser: state.currentUser };
+    case 'set_current_user':
+      return { ...state, currentUser: action.value };
     default:
       return;
   }
 };
+const initialState = { currentUser: null };
 
-const initialState = { currentUser: { email: 'Leo@foodnome.com' } };
+const Context = React.createContext(initialState);
 
-const CounterContext = React.createContext(initialState);
-
-function CounterProvider(props) {
+function UserContext(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   return (
-    <CounterContext.Provider value={{ state, dispatch }}>
+    <Context.Provider value={{ state, dispatch }}>
       {props.children}
-    </CounterContext.Provider>
+    </Context.Provider>
   );
 }
 
-export { CounterContext, CounterProvider };
+export { UserContext, Context };
