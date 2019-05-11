@@ -10,7 +10,6 @@ const Navbar = () => {
     state: { currentUser },
   } = useContext(Context);
 
-  console.log(currentUser);
   return (
     <div>
       {!currentUser && (
