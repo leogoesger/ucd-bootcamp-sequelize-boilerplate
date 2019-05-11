@@ -13,7 +13,9 @@ class Signup extends Component {
     const token = localStorage.getItem('current_user_token');
 
     if (token) {
-      API.validateToken(token).then(() => this.props.history.push('/'));
+      API.validateToken(token)
+        .then(() => this.props.history.push('/'))
+        .catch(() => localStorage.removeItem('current_user_token'));
     }
   }
 
@@ -41,7 +43,12 @@ class Signup extends Component {
           label="password"
           onChange={this.onChange('password')}
         />
-        <button onClick={this.onSubmit}>signup</button>
+        <button
+          onClick={this.onSubmit}
+          disabled={!this.state.email || !this.state.password}
+        >
+          signup
+        </button>
       </div>
     );
   }

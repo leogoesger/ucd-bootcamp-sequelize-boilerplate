@@ -10,21 +10,23 @@ class Login extends Component {
     password: '',
   };
 
-  // componentDidMount() {
-  //   this.loadPosts();
-  // }
+  componentDidMount() {
+    const token = localStorage.getItem('current_user_token');
 
-  // loadPosts = () => {
-  //   API.getPosts()
-  //     .then(res =>
-  //       this.setState({ posts: res.data, title: '', author: '', synopsis: '' })
-  //     )
-  //     .catch(err => console.log(err));
-  // };
+    if (token) {
+      API.validateToken(token)
+        .then(() => this.props.history.push('/'))
+        .catch(() => localStorage.removeItem('current_user_token'));
+    }
+  }
+
+  onSubmit = () => {
+    API.login(this.state)
+      .then(res => localStorage.setItem('current_user_token', res.data.token))
+      .catch(err => console.log(err));
+  };
 
   onChange = key => e => this.setState({ [key]: e.target.value });
-
-  onClick = () => alert(this.state);
 
   render() {
     return (
@@ -42,7 +44,12 @@ class Login extends Component {
           label="password"
           onChange={this.onChange('password')}
         />
-        <button onClick={this.onClick}>Login</button>
+        <button
+          onClick={this.onSubmit}
+          disabled={!Boolean(this.state.email && this.state.password)}
+        >
+          Login
+        </button>
       </div>
     );
   }
